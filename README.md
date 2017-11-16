@@ -5,7 +5,7 @@
 -	Fault tolerance mechanism: we use a primary server and a backup(secondary) server, both servers will be selected from the peers. If one server is down, we will recover this server using the other server.
 
 # Files Description:
--	Game.java:	
+-	## Game.java:	
 	Definition of "Game" interface
 -	Peer.java:	
 	Implementation of the "Game" interface. This is also where the main function is located
