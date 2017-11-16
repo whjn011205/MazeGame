@@ -7,7 +7,7 @@
 # Files Description:
 -	## Game.java:	
 	Definition of "Game" interface
--	Peer.java:	
+-	## Peer.java:	
 	Implementation of the "Game" interface. This is also where the main function is located
 
--	PlayerInfo/ReplyPackage/MazeInfo.java:	Define some classes to store game data, such as the game maze map, or the player information(where the player is in the map), etc.
+-	## PlayerInfo/ReplyPackage/MazeInfo.java:	Define some classes to store game data, such as the game maze map, or the player information(where the player is in the map), etc.
