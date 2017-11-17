@@ -9,31 +9,34 @@ import java.util.Scanner;
 
 public class Peer implements Game {
 
-	static boolean debug = true;
+static boolean debug = true;
 
-	static int start = 0; // indicate whether game is started or not
-	static int playerCount = -1;
-	static int mazeSize = -1;
-	static int treasureCount = -1;
+static int start = 0; // indicate whether game is started or not
+static int playerCount = -1;
+static int mazeSize = -1;
+static int treasureCount = -1;
 
-	static MazeInfo[][] mazeInfo = null; 
-	// Store the information of player occupy and treasure in the maze
+static MazeInfo[][] mazeInfo = null; 
+// Store the information of player occupy and treasure in the maze
 
-	static Vector<PlayerInfo> players = new Vector<PlayerInfo>(0, 1); 
-	// Store the information of players
+static Vector<PlayerInfo> players = new Vector<PlayerInfo>(0, 1); 
+// Store the information of players
 
-	static int pID = -1;
-	static boolean backupFlag = false;
-	static boolean initialS2Flag = false;
-	static Game primary = null;
-	static int primaryID = 0;
-	static Game backup = null;
-	static int backupID = -1;
+static int pID = -1;
+static boolean backupFlag = false;
+static boolean initialS2Flag = false;
+static Game primary = null;
+static int primaryID = 0;
+static Game backup = null;
+static int backupID = -1;
 
-	static Registry registry = null;
-	static Peer obj = new Peer();
+static Registry registry = null;
+static Peer obj = new Peer();
 
-	public ReplyPackage join() {
+
+
+
+public ReplyPackage join() {
 		synchronized (this) {
 			ReplyPackage reply = new ReplyPackage();
 
@@ -95,7 +98,7 @@ public class Peer implements Game {
 		}
 	}
 
-	public ReplyPackage move(int ID, String Direction) {
+public ReplyPackage move(int ID, String Direction) {
 		synchronized (this) {
 			ReplyPackage reply = new ReplyPackage();
 
@@ -107,33 +110,34 @@ public class Peer implements Game {
 				System.out.print("[DEBUG_S] - move() - backupID: " + Integer.toString(backupID) + "\n");
 			}
 
+
+			// based on the move direction, set the change X or Y coordinate
 			int dX = 0;
 			int dY = 0;
-			switch (Direction) { // based on the move direction, set the change
-									// of X or Y coordinate
+			switch (Direction) { 
 
-			case "a":
-				dX = -1;
-				dY = 0;
-				break;
-			case "d":
-				dX = 1;
-				dY = 0;
-				break;
-			case "w":
-				dX = 0;
-				dY = -1;
-				break;
-			case "s":
-				dX = 0;
-				dY = 1;
-				break;
-			case "n":
-				dX=0;
-				dY=0;
-				break;
-			default:
-				break;
+				case "a": 
+					dX = -1;
+					dY = 0;
+					break;
+				case "d":
+					dX = 1;
+					dY = 0;
+					break;
+				case "w":
+					dX = 0;
+					dY = -1;
+					break;
+				case "s":
+					dX = 0;
+					dY = 1;
+					break;
+				case "n":
+					dX=0;
+					dY=0;
+					break;
+				default:
+					break;
 			}
 
 			int oldX = players.elementAt(ID).directionX; // Extract the current
@@ -158,25 +162,14 @@ public class Peer implements Game {
 					
 				} else {
 
-					players.elementAt(ID).directionX = newX; // Update player
-																// new location
-					players.elementAt(ID).directionY = newY; // Same as above
-																// line
-					players.elementAt(ID).playerTreasureCount += mazeInfo[newX][newY].mazeTreasure; // add
-																									// the
-																									// treasure
-																									// count
-																									// to
-																									// the
-																									// players
-					mazeInfo[oldX][oldY].occupyFlag = -1; // set the old
-															// location as
-															// unoccupied
-					mazeInfo[newX][newY].occupyFlag = 1;// set the new location
-														// as occupied;
-					mazeInfo[newX][newY].mazeTreasure = 0;// the treasures at
-															// the new location
-															// are taken away
+					players.elementAt(ID).directionX = newX; // Update player new location
+					players.elementAt(ID).directionY = newY; // Same as above line
+
+					// add the treasure count to the players
+					players.elementAt(ID).playerTreasureCount += mazeInfo[newX][newY].mazeTreasure; 
+					mazeInfo[oldX][oldY].occupyFlag = -1; // set the old location as unoccupied
+					mazeInfo[newX][newY].occupyFlag = 1;// set the new location as occupied;
+					mazeInfo[newX][newY].mazeTreasure = 0;// the treasures at the new location are taken away
 					reply.error = 0; // move successfully
 
 				}
@@ -239,14 +232,16 @@ public class Peer implements Game {
 		}
 	}
 
-	public void update(MazeInfo[][] maze_Info, Vector<PlayerInfo> players_, int maze_Size, int treasure_Count) {
+
+public void update(MazeInfo[][] maze_Info, Vector<PlayerInfo> players_, int maze_Size, int treasure_Count) {
 		mazeInfo = maze_Info.clone();
 		players = players_;
 		mazeSize = maze_Size;
 		treasureCount = treasure_Count;
 	}
 
-	public ReplyPackage gameStatus(int ID) {
+
+public ReplyPackage gameStatus(int ID) {
 		synchronized (this) {
 			ReplyPackage replyPackage = new ReplyPackage();
 			replyPackage.playerInfo = players.elementAt(ID);
@@ -257,7 +252,8 @@ public class Peer implements Game {
 		}
 	}
 
-	public ReplyPackage primaryDown(int ID) {
+
+public ReplyPackage primaryDown(int ID) {
 		synchronized (this) {
 			ReplyPackage reply = new ReplyPackage();
 
@@ -302,7 +298,9 @@ public class Peer implements Game {
 		}
 	}
 
-	public void backupUp() {
+
+
+public void backupUp() {
 		synchronized (this) {
 			try {
 				registry = LocateRegistry.getRegistry();
@@ -320,11 +318,17 @@ public class Peer implements Game {
 		}
 	}
 
-	public int waitStart() {
+
+
+public int waitStart() {
 		return start;
 	}
 
-	public static void main(String args[]) {
+
+
+
+
+public static void main(String args[]) {
 
 		ReplyPackage replyPackage = new ReplyPackage();
 
@@ -398,17 +402,11 @@ public class Peer implements Game {
 			System.out.print("\nInitialize Maze...\n");
 
 			mazeInfo = new MazeInfo[mazeSize][mazeSize];
+
+			// initialize the treasure locations, put the M treasures randomly into the maze
 			for (int a = mazeSize; a > 0; a--)
 				for (int b = mazeSize; b > 0; b--)
-					mazeInfo[a - 1][b - 1] = new MazeInfo(-1, 0); // initialize
-																	// the
-																	// treasure
-																	// locations,
-																	// put the M
-																	// treasures
-																	// randomly
-																	// into the
-																	// maze
+					mazeInfo[a - 1][b - 1] = new MazeInfo(-1, 0); 
 
 			for (int i = treasureCount; i > 0; i--) {
 				Random random = new Random();
@@ -487,9 +485,7 @@ public class Peer implements Game {
 
 		// If i am s1, i need to initialize maze and start count down
 		if (primaryID == pID) {
-
-			while (playerCount < 1) { // playerCount = 1 means 2 players in the
-										// game
+			while (playerCount < 1) { // playerCount = 1 means 2 players in the game
 				try {
 					System.out.checkError();
 				} catch (Exception e) {
@@ -521,8 +517,8 @@ public class Peer implements Game {
 				System.out.print("\n[DEBUG] - main() - start = " + start + "\n");
 			}
 			
-		} else {
-			
+		} 
+		else {			
 			System.out.print("\nWaiting for players...\n");
 			do {
 				try {
@@ -538,6 +534,7 @@ public class Peer implements Game {
 			backup.update(mazeInfo, players, mazeSize, treasureCount);
 		} catch (Exception e) {
 		}
+
 		System.out.print("\n\nGame Start!\n\n");
 
 		// ====================
@@ -554,15 +551,16 @@ public class Peer implements Game {
 			System.out.print("\nGame status: " + e.toString() + "\n");
 		}
 
+		// ==================================================
+		// === Main Game Loop (equivalent as client code) ===
+		// ==================================================	
 		Scanner scan = new Scanner(System.in);
 		do {
 
 			System.out.print("\nCurrent treasure collected: " + replyPackage.playerInfo.playerTreasureCount + "\n");
-
 			System.out.print("\nMaze:\n"); // Draw the game status
 			for (int y = 0; y <= replyPackage.mazeSize - 1; y++) {
 				for (int x = 0; x <= replyPackage.mazeSize - 1; x++) {
-
 					if ((x == replyPackage.playerInfo.directionX) && (y == replyPackage.playerInfo.directionY))
 						System.out.print("X ");
 					else {
@@ -576,9 +574,8 @@ public class Peer implements Game {
 				System.out.print("\n");
 			}
 
-			System.out.print("\nMake a move: "); // Ask the player to key in
-													// commands. Either
-													// movements or Exit
+			// Ask the player to key in commands. Eithers movements or Exit
+			System.out.print("\nMake a move: "); 
 
 			while (1 > 0) {
 				try {
@@ -595,154 +592,152 @@ public class Peer implements Game {
 			if (dir == "Exit") // if player exit the game
 				break;
 
+
+
+
 			try {
-				if (debug == true) {
-					System.out.print("\n");
-					System.out.print("[DEBUG_S] - main() - primaryID: " + Integer.toString(primaryID) + "\n");
-					System.out.print("[DEBUG_S] - main() - backupID: " + Integer.toString(backupID) + "\n");
-				}
-
-				replyPackage = primary.move(pID, dir); // make move
-				primaryID = replyPackage.primaryID;
-				backupID = replyPackage.backupID;
-
-				if (debug == true) {
-					System.out.print("\n");
-					System.out.print("[DEBUG_E] - main() - primaryID: " + Integer.toString(primaryID) + "\n");
-					System.out.print("[DEBUG_E] - main() - backupID: " + Integer.toString(backupID) + "\n");
-				}
-
-				if (pID == backupID) {
-
-					try {
-						backup = (Game) UnicastRemoteObject.exportObject(obj, 0);
-						registry = LocateRegistry.getRegistry();
-						registry.bind("pID_" + Integer.toString(backupID), backup);
-						System.out.print("\nNew setup backup ready\n");
-					} catch (Exception ee) {
-						try {
-							registry.unbind("pID_" + Integer.toString(backupID));
-							registry.bind("pID_" + Integer.toString(backupID), backup);
-							System.out.print("\nNew setup backup ready\n");
-						} catch (Exception eee) {
-							System.out.print("\nNew setup back exception: " + ee.toString() + "\n");
-							ee.printStackTrace();
-						}
-					}
-
-					primary.backupUp();
-
-				} else {
-
-					registry = LocateRegistry.getRegistry();
-					backup = (Game) registry.lookup("pID_" + Integer.toString(backupID));
-
-				}
-
-			} catch (Exception e) {
-				// System.out.print("\nMove error\n");
-				// System.out.print("Move error exception: " + e.toString());
-
-				try {
-
 					if (debug == true) {
 						System.out.print("\n");
-						System.out.print(
-								"[DEBUG_S] - main(),primaryDown() - primaryID: " + Integer.toString(primaryID) + "\n");
-						System.out.print(
-								"[DEBUG_S] - main(),primaryDown() - backupID: " + Integer.toString(backupID) + "\n");
+						System.out.print("[DEBUG_S] - main() - primaryID: " + Integer.toString(primaryID) + "\n");
+						System.out.print("[DEBUG_S] - main() - backupID: " + Integer.toString(backupID) + "\n");
 					}
 
-					replyPackage = backup.primaryDown(pID);
-					backupID = replyPackage.backupID;
-					primaryID = replyPackage.primaryID;
-
-					if (debug == true) {
-						System.out.print("\n");
-						System.out.print(
-								"[DEBUG_E] - main(),primaryDown() - primaryID: " + Integer.toString(primaryID) + "\n");
-						System.out.print(
-								"[DEBUG_E] - main(),primaryDown() - backupID: " + Integer.toString(backupID) + "\n");
-					}
-
-					// i also need to link to the new primary server
-					registry = LocateRegistry.getRegistry();
-					primary = (Game) registry.lookup("pID_" + Integer.toString(primaryID));
 					replyPackage = primary.move(pID, dir); // make move
-					
-					// if i am the first one to find primary down, i will be the
-					// backup
-					if (backupID == pID) {
+					primaryID = replyPackage.primaryID;
+					backupID = replyPackage.backupID;
+
+					if (debug == true) {
+						System.out.print("\n");
+						System.out.print("[DEBUG_E] - main() - primaryID: " + Integer.toString(primaryID) + "\n");
+						System.out.print("[DEBUG_E] - main() - backupID: " + Integer.toString(backupID) + "\n");
+					}
+
+					if (pID == backupID) {
 						try {
 							backup = (Game) UnicastRemoteObject.exportObject(obj, 0);
 							registry = LocateRegistry.getRegistry();
-							// bind my pID as backup server
 							registry.bind("pID_" + Integer.toString(backupID), backup);
-							System.out.print("\nSetup new backup ready\n");
+							System.out.print("\nNew setup backup ready\n");
 						} catch (Exception ee) {
 							try {
 								registry.unbind("pID_" + Integer.toString(backupID));
 								registry.bind("pID_" + Integer.toString(backupID), backup);
-								System.out.print("\nSetup new backup ready\n");
+								System.out.print("\nNew setup backup ready\n");
 							} catch (Exception eee) {
-								System.out.print("\nSetup new backup exception: " + ee.toString() + "\n");
+								System.out.print("\nNew setup back exception: " + ee.toString() + "\n");
 								ee.printStackTrace();
 							}
 						}
 						primary.backupUp();
-					} else {
+					} 
+					else {
 						registry = LocateRegistry.getRegistry();
 						backup = (Game) registry.lookup("pID_" + Integer.toString(backupID));
 					}
+			} 
+			catch (Exception e) {
+					try {	
+							if (debug == true) {
+								System.out.print("\n");
+								System.out.print(
+										"[DEBUG_S] - main(),primaryDown() - primaryID: " + Integer.toString(primaryID) + "\n");
+								System.out.print(
+										"[DEBUG_S] - main(),primaryDown() - backupID: " + Integer.toString(backupID) + "\n");
+							}
 
-//					replyPackage = primary.move(pID, dir); // make move
+							replyPackage = backup.primaryDown(pID);
+							backupID = replyPackage.backupID;
+							primaryID = replyPackage.primaryID;
 
-				} catch (Exception ee) {
-					System.out.print("\nLink to new primary exception: " + ee.toString()+"\n");
-				}
+							if (debug == true) {
+								System.out.print("\n");
+								System.out.print(
+										"[DEBUG_E] - main(),primaryDown() - primaryID: " + Integer.toString(primaryID) + "\n");
+								System.out.print(
+										"[DEBUG_E] - main(),primaryDown() - backupID: " + Integer.toString(backupID) + "\n");
+							}
+
+							// i also need to link to the new primary server
+							registry = LocateRegistry.getRegistry();
+							primary = (Game) registry.lookup("pID_" + Integer.toString(primaryID));
+							replyPackage = primary.move(pID, dir); // make move
+							
+							// if i am the first one to find primary down, i will be the
+							// backup
+							if (backupID == pID) {
+								try {
+									backup = (Game) UnicastRemoteObject.exportObject(obj, 0);
+									registry = LocateRegistry.getRegistry();
+									// bind my pID as backup server
+									registry.bind("pID_" + Integer.toString(backupID), backup);
+									System.out.print("\nSetup new backup ready\n");
+								} catch (Exception ee) {
+									try {
+										registry.unbind("pID_" + Integer.toString(backupID));
+										registry.bind("pID_" + Integer.toString(backupID), backup);
+										System.out.print("\nSetup new backup ready\n");
+									} catch (Exception eee) {
+										System.out.print("\nSetup new backup exception: " + ee.toString() + "\n");
+										ee.printStackTrace();
+									}
+								}
+								primary.backupUp();
+							} else {
+								registry = LocateRegistry.getRegistry();
+								backup = (Game) registry.lookup("pID_" + Integer.toString(backupID));
+							}
+
+					} 
+					catch (Exception ee) {
+							System.out.print("\nLink to new primary exception: " + ee.toString()+"\n");
+					}
 
 			}
+
+
 
 			if (replyPackage.error == 1) {
 				System.out.print("\nDestination is already occupied by another player!!!\n");
 			} else {
-				if (replyPackage.error == 2)
-					System.out.print("\nHits the wall!!!\n");
-				else {
-					if (replyPackage.error == 3) {
-						try {
-							replyPackage = primary.gameStatus(pID);
-						} catch (Exception e) {
-							System.out.print("\nGame status\n");
-							System.out.print("\nGame status: " + e.toString() + "\n");
-						}
-						
-						System.out.print("\nGame Over!!!\n");
-						
-						int n = 1;
-						for(int i = 0;i<= replyPackage.players.size()-1;i++) {
-							if(pID != i) {
-								if(replyPackage.players.elementAt(i).playerTreasureCount > replyPackage.players.elementAt(pID).playerTreasureCount) {
-									n++;
-								}
+					if (replyPackage.error == 2)
+						System.out.print("\nHits the wall!!!\n");
+					else {
+							if (replyPackage.error == 3) {
+									try {
+										replyPackage = primary.gameStatus(pID);
+									} catch (Exception e) {
+										System.out.print("\nGame status\n");
+										System.out.print("\nGame status: " + e.toString() + "\n");
+									}
+									
+									System.out.print("\nGame Over!!!\n");
+									
+									int n = 1;
+									for(int i = 0;i<= replyPackage.players.size()-1;i++) {
+										if(pID != i) {
+											if(replyPackage.players.elementAt(i).playerTreasureCount > replyPackage.players.elementAt(pID).playerTreasureCount) {
+												n++;
+											}
+										}
+									}
+									
+									System.out.print("\nYou rank no."+Integer.toString(n)+" !!!\n");
+									
+									try {
+										registry.unbind("pID_" + Integer.toString(pID));
+										UnicastRemoteObject.unexportObject(obj, true);
+									} catch (Exception e) {
+									}
+									break;
 							}
-						}
-						System.out.print("\nYou rank no."+Integer.toString(n)+" !!!\n");
-						
-						try {
-							registry.unbind("pID_" + Integer.toString(pID));
-							UnicastRemoteObject.unexportObject(obj, true);
-						} catch (Exception e) {
-						}
-						break;
 					}
-				}
 			}
 
 		} while (1 > 0);
 		
 		scan.close();
 
-	} // end of main
+} // end of main
+
 
 } // end of class
